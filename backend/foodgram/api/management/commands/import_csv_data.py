@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 
 from foodgram.models import Ingredient
 
-CSV_PATH = './data/'
+CSV_PATH = '/data/'
 
 
 class Command(BaseCommand):
