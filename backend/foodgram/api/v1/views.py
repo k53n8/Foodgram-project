@@ -8,6 +8,10 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from foodgram.models import (Favorites, Ingredient, IngredientsForRecipes,
+                             Recipe, ShoppingCart, Tag)
+from users.models import Subscription, User
+
 from .filters import RecipeFilter
 from .permissions import IsAdminAuthorOrReadOnly
 from .serializers import (IngredientSerializer, RecipeGetSerializer,
@@ -16,9 +20,6 @@ from .serializers import (IngredientSerializer, RecipeGetSerializer,
                           SubSmallRecipeSerializer, TagSerializer,
                           UserChangePasswordSerializer, UserCreateSerializer,
                           UserGetSerializer)
-from foodgram.models import (Favorites, Ingredient, IngredientsForRecipes,
-                             Recipe, ShoppingCart, Tag)
-from users.models import Subscription, User
 
 
 class TagViewSet(ReadOnlyModelViewSet):
