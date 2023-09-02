@@ -91,7 +91,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }} 
         passphrase: ${{ secrets.SSH_PASSPHRASE }} 
         script: | 
-          cd foodgram 
+          cd foodgram
+          sudo mv infra/docker-compose.yml docker-compose.yml
+          sudo rm -r infra 
           sudo docker compose -f docker-compose.yml pull 
           sudo docker compose -f docker-compose.yml down 
           sudo docker compose -f docker-compose.yml up -d 
