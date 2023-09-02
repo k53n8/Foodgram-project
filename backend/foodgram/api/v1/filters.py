@@ -1,6 +1,5 @@
-from django_filters import (BooleanFilter, FilterSet,
-                            ModelChoiceFilter, ModelMultipleChoiceFilter)
-
+from django_filters import (BooleanFilter, FilterSet, ModelChoiceFilter,
+                            ModelMultipleChoiceFilter)
 
 from foodgram.models import Recipe, Tag, User
 
