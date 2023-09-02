@@ -1,20 +1,21 @@
-from django_filters.rest_framework import filters
+from django_filters import (FilterSet, ModelChoiceFilter,
+                            ModelMultipleChoiceFilter, BooleanFilter)
 
 from foodgram.models import Recipe, Tag, User
 
 
-class RecipeFilter(filters.FilterSet):
+class RecipeFilter(FilterSet):
     """Фильтр для рецептов"""
-    is_favorited = filters.BooleanFilter(
+    is_favorited = BooleanFilter(
         field_name='in_favorites__user', method='filter_is_favorited'
         )
-    is_in_shopping_cart = filters.BooleanFilter(
+    is_in_shopping_cart = BooleanFilter(
         field_name='in_carts__user', method='filter_is_in_shopping_cart'
         )
-    author = filters.ModelChoiceFilter(
+    author = ModelChoiceFilter(
         field_name='author', queryset=User.objects.all()
         )
-    tags = filters.ModelMultipleChoiceFilter(
+    tags = ModelMultipleChoiceFilter(
         field_name='tags__slug', to_field_name='slug',
         queryset=Tag.objects.all()
         )
