@@ -27,12 +27,12 @@ services:
     image: k53n/foodgram_frontend
     command: cp -r /app/build/. /frontend_static/
     env_file: 
-      - .env
+      - ./.env
     volumes:
       - static:/frontend_static
 
   nginx:
-    image: nginx:1.19.3
+    image: nginx:latest
     ports:
       - "10000:80"
     volumes:
