@@ -19,7 +19,7 @@ jobs:
       run: | 
         python -m pip install --upgrade pip  
         pip install flake8==6.0.0 flake8-isort==6.0.0 
-        pip install -r ./backend/requirements.txt  
+        pip install -r ./backend/foodgram/requirements.txt  
     - name: Test with flake8 and django 
       run: | 
         python -m flake8 backend/ 
@@ -41,7 +41,7 @@ jobs:
       - name: Push to DockerHub 
         uses: docker/build-push-action@v4 
         with: 
-          context: ./backend/ 
+          context: ./backend/foodgram/
           push: true 
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest 
         
@@ -97,9 +97,9 @@ jobs:
           sudo docker compose -f docker-compose.yml pull 
           sudo docker compose -f docker-compose.yml down 
           sudo docker compose -f docker-compose.yml up -d 
-          sudo docker compose -f docker-compose.yml exec backend python foodgram/manage.py migrate 
-          sudo docker compose -f docker-compose.yml exec backend python foodgram/manage.py collectstatic --no-input
-          sudo docker compose -f docker-compose.yml exec backend python foodgram/manage.py import_csv_data
+          sudo docker compose -f docker-compose.yml exec backend python manage.py migrate 
+          sudo docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input
+          sudo docker compose -f docker-compose.yml exec backend python manage.py import_csv_data
  
   send_message: 
     name: Telegram message 
