@@ -1,10 +1,12 @@
 import csv
+import os
 
 from django.core.management import BaseCommand
 
 from recipes.models import Ingredient
 
-CSV_PATH = '/data/'
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, '../../../data/ingredients.csv')
 
 
 class Command(BaseCommand):
@@ -12,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        with open('/data/ingredients.csv', 'r', encoding='utf-8') as csvfile:
+        with open(filename, 'r', encoding='utf-8') as csvfile:
             dict_reader = csv.DictReader(
                 csvfile, fieldnames=['name', 'measurement_unit']
             )
