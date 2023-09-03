@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 
 from recipes.models import Ingredient
 
-DATA_DIR = os.path.join(settings.BASE_DIR, 'recipes', 'data')
+file_path = os.path.join(settings.BASE_DIR, 'recipes', 'data', 'ingridietns.csv')
 
 
 class Command(BaseCommand):
@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        with open(DATA_DIR, 'r', encoding='utf-8') as csvfile:
+        with open(file_path, 'r', encoding='utf-8') as csvfile:
             dict_reader = csv.DictReader(
                 csvfile, fieldnames=['name', 'measurement_unit']
             )
