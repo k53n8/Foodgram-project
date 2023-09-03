@@ -38,7 +38,7 @@ class Ingredient(models.Model):
     """Модель ингредиентов"""
     name = models.CharField(
         max_length=settings.OTHER_SYM_LIMIT,
-        verbose_name='Название ингридиента',
+        verbose_name='Название ингредиента',
     )
     measurement_unit = models.CharField(
         max_length=settings.OTHER_SYM_LIMIT,
@@ -47,8 +47,8 @@ class Ingredient(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
         constraints = [
             models.UniqueConstraint(fields=['name', 'measurement_unit'],
                                     name='unique_ingredient')
@@ -170,7 +170,7 @@ class IngredientsForRecipes(models.Model):
         Ingredient,
         on_delete=models.CASCADE,
         related_name='ingredient_measure',
-        verbose_name='Ингридиент',
+        verbose_name='Ингредиент',
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -179,12 +179,12 @@ class IngredientsForRecipes(models.Model):
         verbose_name='Рецепт',
     )
     measure = models.PositiveSmallIntegerField(
-        verbose_name='Количество ингридиента'
+        verbose_name='Количество ингредиента'
     )
 
     class Meta:
-        verbose_name = 'Количество ингридиента в рецепте',
-        verbose_name_plural = 'Количество ингридиентов в рецепте'
+        verbose_name = 'Количество ингредиента в рецепте',
+        verbose_name_plural = 'Количество ингредиентов в рецепте'
 
     def __str__(self):
         return (f'В {self.recipe} используется {self.ingredient}'
