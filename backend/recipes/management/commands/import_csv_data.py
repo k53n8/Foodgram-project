@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 
 from recipes.models import Ingredient
 
-DATA_DIR = os.path.join(settings.BASE_DIR, 'data')
+DATA_DIR = os.path.join(settings.BASE_DIR, 'recipes', 'data')
 
 
 class Command(BaseCommand):
