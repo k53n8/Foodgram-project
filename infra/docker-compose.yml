@@ -13,6 +13,11 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   backend:
     image: k53n/foodgram_backend
@@ -22,7 +27,8 @@ services:
       - static:/backend_static
       - media:/app/media
     depends_on: 
-      - db
+      - db:
+          condition: service_healthy
 
   frontend:
     image: k53n/foodgram_frontend
