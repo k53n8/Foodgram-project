@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
 from django_filters import (BooleanFilter, FilterSet, ModelChoiceFilter,
                             ModelMultipleChoiceFilter)
 
-from recipes.models import Recipe, Tag, User
+from recipes.models import Recipe, Tag
+
+User = get_user_model()
 
 
 class RecipeFilter(FilterSet):

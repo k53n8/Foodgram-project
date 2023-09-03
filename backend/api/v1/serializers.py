@@ -1,5 +1,6 @@
 import base64
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
@@ -8,7 +9,9 @@ from rest_framework.exceptions import ValidationError
 
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, ShoppingCart, Tag)
-from users.models import Subscription, User
+from users.models import Subscription
+
+User = get_user_model()
 
 
 class Base64Serializer(serializers.ImageField):

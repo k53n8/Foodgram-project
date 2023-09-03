@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -10,7 +11,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, ShoppingCart, Tag)
-from users.models import Subscription, User
+from users.models import Subscription
 
 from .filters import RecipeFilter
 from .permissions import IsAdminAuthorOrReadOnly
@@ -20,6 +21,8 @@ from .serializers import (IngredientSerializer, RecipeGetSerializer,
                           SubSmallRecipeSerializer, TagSerializer,
                           UserChangePasswordSerializer, UserCreateSerializer,
                           UserGetSerializer)
+
+User = get_user_model()
 
 
 class TagViewSet(ReadOnlyModelViewSet):
