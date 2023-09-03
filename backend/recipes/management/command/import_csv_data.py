@@ -2,9 +2,9 @@ import csv
 
 from django.core.management import BaseCommand
 
-from foodgram.models import Ingredient
+from recipes.models import Ingredient
 
-CSV_PATH = 'data/'
+CSV_PATH = '/data/'
 
 
 class Command(BaseCommand):
@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        with open('data/ingredients.csv', 'r', encoding='utf-8') as csvfile:
+        with open('/data/ingredients.csv', 'r', encoding='utf-8') as csvfile:
             dict_reader = csv.DictReader(
                 csvfile, fieldnames=['name', 'measurement_unit']
             )

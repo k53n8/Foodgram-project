@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from foodgram.models import (Favorites, Ingredient, IngredientsForRecipes,
-                             Recipe, ShoppingCart, Tag)
+from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
+                            Recipe, ShoppingCart, Tag)
 from users.models import Subscription, User
 
 

@@ -1,7 +1,7 @@
 from django_filters import (BooleanFilter, FilterSet, ModelChoiceFilter,
                             ModelMultipleChoiceFilter)
 
-from foodgram.models import Recipe, Tag, User
+from recipes.models import Recipe, Tag, User
 
 
 class RecipeFilter(FilterSet):
