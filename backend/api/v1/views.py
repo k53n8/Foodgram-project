@@ -28,7 +28,6 @@ class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет для тегов"""
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
-    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
