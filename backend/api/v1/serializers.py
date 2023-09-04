@@ -224,7 +224,7 @@ class MeasureSerializer(serializers.ModelSerializer):
     Сериализатор кол-ва ингредиентов в рецепте, при
     изменении или создании рецепта
     """
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(source='ingredient.id')
 
     class Meta:
         model = IngredientsForRecipes
@@ -270,7 +270,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
         for ingredient in ingredients:
-            recipe.ingredient_measure.create(
+            recipe.ingredient_for_recipe.create(
                 ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
                 measure=ingredient['measure']
             )
