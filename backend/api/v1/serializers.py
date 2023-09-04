@@ -270,11 +270,14 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-        for ingredient in ingredients:
-            recipe.ingredient_for_recipe.create(
+
+        IngredientsForRecipes.objects.bulk_create(
+            [IngredientsForRecipes(
                 ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
+                recipe=recipe,
                 measure=ingredient['measure']
-            )
+            ) for ingredient in ingredients]
+        )
         return recipe
 
     def update(self, instance, validated_data):
