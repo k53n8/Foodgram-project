@@ -25,7 +25,6 @@ services:
 
   frontend:
     image: k53n/foodgram_frontend
-    command: cp -r /app/build/. /frontend_static/
     env_file: 
       - .env
     volumes:
