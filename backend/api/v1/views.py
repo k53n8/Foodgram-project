@@ -28,7 +28,6 @@ class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет для тегов"""
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
-    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -37,6 +36,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = IngredientFilter
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
