@@ -252,12 +252,13 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Пожалуйста добавьте теги к рецепту!'
             )
-        if any(
-            ingredient['measure'] < 1 for ingredient in data['ingredients']
-        ):
-            raise serializers.ValidationError(
-                'Количество ингридиентов не может быть меньше одного!'
-            )
+        ingredients_id = []
+        for ingredient in data['ingredients']:
+            if ingredient['measure'] < 1:
+                raise serializers.ValidationError(
+                    'Колличество ингридиента не может быть меньше одного'
+                )
+            ingredients_id.append(ingredient['id'])
         if data['cooking_time'] == 0:
             raise serializers.ValidationError(
                 'Время приготовления блюда не может быть равно нулю!'
