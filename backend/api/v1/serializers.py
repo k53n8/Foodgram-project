@@ -224,7 +224,7 @@ class AmountSerializer(serializers.ModelSerializer):
     Сериализатор кол-ва ингредиентов в рецепте, при
     изменении или создании рецепта
     """
-    id = serializers.IntegerField(source='ingredient.id')
+    id = serializers.IntegerField()
 
     class Meta:
         model = IngredientsForRecipes
