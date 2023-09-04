@@ -186,10 +186,10 @@ class TagSerializer(serializers.ModelSerializer):
 
 class RecipeGetSerializer(serializers.ModelSerializer):
     """Сериализатор получения рецепта"""
-    tags = TagSerializer(many=True, read_only=True)
-    author = UserGetSerializer(read_only=True)
+    tags = TagSerializer(many=True)
+    author = UserGetSerializer()
     ingredients = IngredientsForRecipesSerializer(
-        source='ingredient_measure',
+        source='ingredient_for_recipe',
         many=True,
         read_only=True
     )
@@ -298,17 +298,16 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
                                    context=context).data
 
 
+class FavoritesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ['id', 'user', 'recipe']
+        model = Favorites
+
+
 class ShopCartSerializer(serializers.ModelSerializer):
-    """Сериализатор корзины"""
+    """Сериализатор списка покупок"""
+
     class Meta:
         model = ShoppingCart
-        fields = ('user', 'recipe')
-
-    def create(self, validated_data):
-        if ShoppingCart.objects.filter(
-                user=validated_data['user'],
-                recipe=validated_data['recipe']).exists():
-            raise serializers.ValidationError(
-                'Вы уже добавили рецепт в корзину для покупок!'
-            )
-        return ShoppingCart.objects.create(**validated_data)
+        fields = '__all__'

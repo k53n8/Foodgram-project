@@ -13,13 +13,14 @@ from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
 from users.models import Subscription
 
 from .filters import IngredientFilter, RecipeFilter
+from .mixins import CreateDestroyViewSet
 from .permissions import IsAdminAuthorOrReadOnly
-from .serializers import (IngredientSerializer, RecipeGetSerializer,
-                          RecipePostPatchDeleteSerializer, ShopCartSerializer,
-                          SubGetSerializer, SubPostSerializer,
-                          SubSmallRecipeSerializer, TagSerializer,
-                          UserChangePasswordSerializer, UserCreateSerializer,
-                          UserGetSerializer)
+from .serializers import (FavoritesSerializer, IngredientSerializer,
+                          RecipeGetSerializer, RecipePostPatchDeleteSerializer,
+                          ShopCartSerializer, SubGetSerializer,
+                          SubPostSerializer, SubSmallRecipeSerializer,
+                          TagSerializer, UserChangePasswordSerializer,
+                          UserCreateSerializer, UserGetSerializer)
 
 User = get_user_model()
 
@@ -28,6 +29,7 @@ class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет для тегов"""
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -53,20 +55,6 @@ class RecipeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-    @action(detail=True, methods=['post', 'delete'],
-            permission_classes=[IsAuthenticated])
-    def favorite(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, pk=pk)
-        if request.method == 'POST':
-            Favorites.objects.create(recipe=recipe, user=request.user)
-            serializer = SubSmallRecipeSerializer(recipe)
-            return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
-            )
-        Favorites.objects.filter(recipe=recipe, user=request.user).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
@@ -108,6 +96,27 @@ class RecipeViewSet(ModelViewSet):
         response = HttpResponse(list_of_products, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename="{file}.txt"'
         return response
+
+
+class FavoriteViewSet(CreateDestroyViewSet):
+    serializer_class = FavoritesSerializer
+    permission_classes = [IsAuthenticated]
+    model = Favorites
+
+    def create(self, request, *args, **kwargs):
+        recipe_id = kwargs.get('recipe_id')
+        recipe = get_object_or_404(Recipe, id=recipe_id)
+        self.model.objects.create(user=request.user, recipe=recipe)
+        serializer = SubSmallRecipeSerializer(recipe, many=False)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        recipe_id = kwargs.get('recipe_id')
+        recipe = get_object_or_404(Recipe, id=recipe_id)
+        get_object_or_404(
+            self.model, user=request.user, recipe=recipe
+            ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserViewSet(ModelViewSet):

@@ -13,9 +13,9 @@ class Tag(models.Model):
         unique=True,
     )
     color = models.CharField(
-        max_length=settings.OTHER_SYM_LIMIT,
+        max_length=settings.COLOR_SYM_LIMIT,
         verbose_name='Цвет тега',
-        unique=True,
+        default=settings.DEFAULT_COLOR,
     )
     slug = models.SlugField(
         verbose_name='Слаг тега',
@@ -44,15 +44,6 @@ class Ingredient(models.Model):
         max_length=settings.OTHER_SYM_LIMIT,
         verbose_name='Единицы измерения',
     )
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
-        constraints = [
-            models.UniqueConstraint(fields=['name', 'measurement_unit'],
-                                    name='unique_ingredient')
-        ]
 
     def __str__(self):
         return self.name
@@ -93,7 +84,7 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта',
     )
     image = models.ImageField(
-        null=True,
+        blank=True,
         default=None,
         upload_to='recipes/images/',
         verbose_name='Изображение',
@@ -113,13 +104,13 @@ class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='in_shopcart',
+        related_name='add_shopcart',
         verbose_name='Рецепты для покупок',
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='shopcart',
+        related_name='add_shopcart',
         verbose_name='Владелец списка покупок',
     )
 
@@ -129,7 +120,7 @@ class ShoppingCart(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'user'],
-                name='Рецепт уже добавлен в список покупок!'
+                name='unique_shopcart'
             )
         ]
 
@@ -142,13 +133,13 @@ class Favorites(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='in_favorites',
+        related_name='add_favorites',
         verbose_name='Избранные рецепты',
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorites',
+        related_name='add_favorites',
         verbose_name='Пользователь',
     )
 
@@ -157,7 +148,7 @@ class Favorites(models.Model):
         verbose_name_plural = 'Избранные рецепты'
         constraints = [
             models.UniqueConstraint(fields=['recipe', 'user'],
-                                    name='Рецепт уже добавлен в избранное!')
+                                    name='unique_favorites')
         ]
 
     def __str__(self) -> str:
@@ -169,13 +160,13 @@ class IngredientsForRecipes(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='ingredient_measure',
+        related_name='ingredient_for_recipe',
         verbose_name='Ингредиент',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredient_measure',
+        related_name='ingredient_for_recipe',
         verbose_name='Рецепт',
     )
     measure = models.PositiveSmallIntegerField(
