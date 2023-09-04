@@ -86,10 +86,10 @@ class RecipeViewSet(ModelViewSet):
         )
         total_amount = 0
         for ingredient in ingredients:
-            total_amount += ingredient['measure']
+            total_amount += ingredient['amount']
             list_of_products += (
                 f'\n{ingredient["ingredient__name"]} - '
-                f'{ingredient["measure"]} '
+                f'{ingredient["amount"]} '
                 f'{ingredient["ingredient__measurement_unit"]}'
             )
         file = 'list_of_products.txt'

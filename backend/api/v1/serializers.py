@@ -167,7 +167,7 @@ class IngredientsForRecipesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IngredientsForRecipes
-        fields = ('id', 'name', 'measurement_unit', 'measure')
+        fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -219,7 +219,7 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         ).exists()
 
 
-class MeasureSerializer(serializers.ModelSerializer):
+class AmountSerializer(serializers.ModelSerializer):
     """
     Сериализатор кол-ва ингредиентов в рецепте, при
     изменении или создании рецепта
@@ -228,7 +228,7 @@ class MeasureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IngredientsForRecipes
-        fields = ('id', 'measure')
+        fields = ('id', 'amount')
 
 
 class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
@@ -238,7 +238,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         many=True
     )
     author = UserGetSerializer(read_only=True)
-    ingredients = MeasureSerializer(many=True)
+    ingredients = AmountSerializer(many=True)
     image = Base64Serializer()
 
     class Meta:
@@ -252,13 +252,11 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Пожалуйста добавьте теги к рецепту!'
             )
-        ingredients_id = []
-        for ingredient in data['ingredients']:
-            if ingredient['measure'] < 1:
-                raise serializers.ValidationError(
-                    'Колличество ингридиента не может быть меньше одного'
-                )
-            ingredients_id.append(ingredient['id'])
+        ingredients = data.get('ingredients', [])
+        if not ingredients:
+            raise serializers.ValidationError(
+                'Пожалуйста добавьте ингредиенты!'
+            )
         if data['cooking_time'] == 0:
             raise serializers.ValidationError(
                 'Время приготовления блюда не может быть равно нулю!'
@@ -270,12 +268,11 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-
         IngredientsForRecipes.objects.bulk_create(
             [IngredientsForRecipes(
                 ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
                 recipe=recipe,
-                measure=ingredient['measure']
+                amount=ingredient['amount']
             ) for ingredient in ingredients]
         )
         return recipe
@@ -289,7 +286,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             IngredientsForRecipes(
                 ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
                 recipe=instance,
-                measure=ingredient['measure']
+                amount=ingredient['amount']
             ) for ingredient in ingredients
         ])
         instance.save()

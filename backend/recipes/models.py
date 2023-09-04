@@ -169,7 +169,7 @@ class IngredientsForRecipes(models.Model):
         related_name='ingredient_for_recipe',
         verbose_name='Рецепт',
     )
-    measure = models.PositiveSmallIntegerField(
+    amount = models.PositiveSmallIntegerField(
         verbose_name='Количество ингредиента'
     )
 
@@ -179,4 +179,4 @@ class IngredientsForRecipes(models.Model):
 
     def __str__(self):
         return (f'В {self.recipe} используется {self.ingredient}'
-                f' в кол-ве {self.measure}')
+                f' в кол-ве {self.amount}')
