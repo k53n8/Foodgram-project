@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
-from django_filters import (BooleanFilter, FilterSet, ModelChoiceFilter,
-                            ModelMultipleChoiceFilter, CharFilter)
+from django_filters import (BooleanFilter, CharFilter, FilterSet,
+                            ModelChoiceFilter, ModelMultipleChoiceFilter)
 
-from recipes.models import Recipe, Tag, Ingredient
+from recipes.models import Ingredient, Recipe, Tag
 
 User = get_user_model()
 
