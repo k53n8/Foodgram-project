@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django_filters import (BooleanFilter, FilterSet, ModelChoiceFilter,
-                            ModelMultipleChoiceFilter)
+                            ModelMultipleChoiceFilter, CharFilter)
 
-from recipes.models import Recipe, Tag
+from recipes.models import Recipe, Tag, Ingredient
 
 User = get_user_model()
 
@@ -36,3 +36,14 @@ class RecipeFilter(FilterSet):
         if value and self.request.user.is_authenticated:
             return queryset.filter(in_shopcart__user=self.request.user)
         return queryset
+
+
+class IngredientFilter(FilterSet):
+    name = CharFilter(
+        field_name='name',
+        lookup_expr='startswith',
+    )
+
+    class Meta:
+        model = Ingredient
+        fields = ('name',)

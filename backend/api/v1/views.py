@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -13,7 +12,7 @@ from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, ShoppingCart, Tag)
 from users.models import Subscription
 
-from .filters import RecipeFilter
+from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAdminAuthorOrReadOnly
 from .serializers import (IngredientSerializer, RecipeGetSerializer,
                           RecipePostPatchDeleteSerializer, ShopCartSerializer,
@@ -29,14 +28,15 @@ class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет для тегов"""
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Вьюсет для ингредиентов"""
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
-    filter_backends = [SearchFilter]
-    search_fields = ['name']
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = IngredientFilter
 
 
 class RecipeViewSet(ModelViewSet):
