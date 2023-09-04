@@ -13,7 +13,7 @@ class RecipeFilter(FilterSet):
         field_name='in_favorites__user', method='filter_is_favorited'
         )
     is_in_shopping_cart = BooleanFilter(
-        field_name='in_carts__user', method='filter_is_in_shopping_cart'
+        field_name='in_shopcart__user', method='filter_is_in_shopping_cart'
         )
     author = ModelChoiceFilter(
         field_name='author', queryset=User.objects.all()
