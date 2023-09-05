@@ -224,7 +224,7 @@ class AmountSerializer(serializers.ModelSerializer):
     Сериализатор кол-ва ингредиентов в рецепте, при
     изменении или создании рецепта
     """
-    id = serializers.IntegerField(source='ingredient.id')
+    id = serializers.IntegerField()
 
     class Meta:
         model = IngredientsForRecipes
@@ -282,8 +282,9 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         instance = super().update(instance, validated_data)
         instance.tags.set(tags)
-        instance.ingredients.set([
-            IngredientsForRecipes(
+        instance.ingredients.clear()
+        IngredientsForRecipes.objects.bulk_create(
+            [IngredientsForRecipes(
                 ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
                 recipe=instance,
                 amount=ingredient['amount']
@@ -303,7 +304,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
     """Сериализатор избранного"""
 
     class Meta:
-        fields = ['id', 'user', 'recipe']
+        fields = ('id', 'user', 'recipe')
         model = Favorites
 
 
