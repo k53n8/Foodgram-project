@@ -288,8 +288,8 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
                 ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
                 recipe=instance,
                 amount=ingredient['amount']
-            ) for ingredient in ingredients
-        ])
+            ) for ingredient in ingredients]
+        )
         instance.save()
         return instance
 
