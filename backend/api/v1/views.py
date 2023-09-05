@@ -94,7 +94,7 @@ class RecipeViewSet(ModelViewSet):
     def download_shopping_cart(self, request):
         list_of_products = 'Список продуктов:'
         ingredients = IngredientsForRecipes.objects.filter(
-            recipe__in_carts__user=request.user
+            recipe__add_shopcart__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
         ).annotate(amount=F('amount'))
