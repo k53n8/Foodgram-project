@@ -155,7 +155,7 @@ class UserViewSet(ModelViewSet):
     def subscriptions(self, request):
         pages = self.paginate_queryset(
             User.objects.filter(subauthor__user=self.user)
-            )
+        )
         serializer = SubGetSerializer(
             pages,
             many=True,

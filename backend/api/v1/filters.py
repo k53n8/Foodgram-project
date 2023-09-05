@@ -11,17 +11,17 @@ class RecipeFilter(FilterSet):
     """Фильтр для рецептов"""
     is_favorited = NumberFilter(
         field_name='add_favorites__user', method='filter_is_favorited'
-        )
+    )
     is_in_shopping_cart = NumberFilter(
         field_name='add_shopcart__user', method='filter_is_in_shopping_cart'
-        )
+    )
     author = ModelChoiceFilter(
         field_name='author', queryset=User.objects.all()
-        )
+    )
     tags = ModelMultipleChoiceFilter(
         field_name='tags__slug', to_field_name='slug',
         queryset=Tag.objects.all()
-        )
+    )
 
     class Meta:
         model = Recipe

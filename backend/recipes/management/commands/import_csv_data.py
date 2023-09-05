@@ -8,7 +8,7 @@ from recipes.models import Ingredient
 
 file_path = os.path.join(
     settings.BASE_DIR, 'recipes', 'data', 'ingredients.csv'
-    )
+)
 
 
 class Command(BaseCommand):
