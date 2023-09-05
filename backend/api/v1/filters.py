@@ -10,10 +10,10 @@ User = get_user_model()
 class RecipeFilter(FilterSet):
     """Фильтр для рецептов"""
     is_favorited = BooleanFilter(
-        field_name='in_favorites__user', method='filter_is_favorited'
+        field_name='add_favorites__user', method='filter_is_favorited'
         )
     is_in_shopping_cart = BooleanFilter(
-        field_name='in_shopcart__user', method='filter_is_in_shopping_cart'
+        field_name='add_shopcart__user', method='filter_is_in_shopping_cart'
         )
     author = ModelChoiceFilter(
         field_name='author', queryset=User.objects.all()
@@ -29,12 +29,12 @@ class RecipeFilter(FilterSet):
 
     def filter_is_favorited(self, queryset, name, value):
         if value and self.request.user.is_authenticated:
-            return queryset.filter(in_favorites__user=self.request.user)
+            return queryset.filter(add_favorites__user=self.request.user)
         return queryset
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
         if value and self.request.user.is_authenticated:
-            return queryset.filter(in_shopcart__user=self.request.user)
+            return queryset.filter(add_shopcart__user=self.request.user)
         return queryset
 
 

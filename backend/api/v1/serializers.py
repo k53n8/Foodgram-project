@@ -159,7 +159,7 @@ class SubPostSerializer(serializers.ModelSerializer):
 
 class IngredientsForRecipesSerializer(serializers.ModelSerializer):
     """Сериализатор кол-ва ингредиентов в рецепте"""
-    id = serializers.CharField(source='ingredient.id')
+    id = serializers.IntegerField(source='ingredient.id')
     name = serializers.CharField(source='ingredient.name')
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit'
@@ -300,6 +300,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
+    """Сериализатор избранного"""
 
     class Meta:
         fields = ['id', 'user', 'recipe']
