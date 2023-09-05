@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django_filters import (CharFilter, FilterSet, ModelChoiceFilter, 
+from django_filters import (CharFilter, FilterSet, ModelChoiceFilter,
                             ModelMultipleChoiceFilter, NumberFilter)
 
 from recipes.models import Ingredient, Recipe, Tag
