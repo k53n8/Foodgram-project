@@ -14,12 +14,12 @@ from users.models import Subscription
 
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAdminAuthorOrReadOnly
-from .serializers import (IngredientSerializer,
-                          RecipeGetSerializer, RecipePostPatchDeleteSerializer,
-                          ShopCartSerializer, SubGetSerializer,
-                          SubPostSerializer, SubSmallRecipeSerializer,
-                          TagSerializer, UserChangePasswordSerializer,
-                          UserCreateSerializer, UserGetSerializer)
+from .serializers import (IngredientSerializer, RecipeGetSerializer,
+                          RecipePostPatchDeleteSerializer, ShopCartSerializer,
+                          SubGetSerializer, SubPostSerializer,
+                          SubSmallRecipeSerializer, TagSerializer,
+                          UserChangePasswordSerializer, UserCreateSerializer,
+                          UserGetSerializer)
 
 User = get_user_model()
 
