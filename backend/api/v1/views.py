@@ -1,3 +1,5 @@
+from djoser.views import UserViewSet
+
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from django.http import HttpResponse
@@ -127,7 +129,7 @@ class RecipeViewSet(ModelViewSet):
         return response
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(UserViewSet):
     """Вьюсет для пользователя"""
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
