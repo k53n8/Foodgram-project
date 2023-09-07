@@ -220,7 +220,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         many=True
     )
     author = UserGetSerializer(read_only=True)
-    ingredients = AmountSerializer()
+    ingredients = AmountSerializer(many=True)
     image = Base64ImageField()
 
     class Meta:
