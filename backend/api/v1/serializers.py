@@ -208,7 +208,7 @@ class AmountSerializer(serializers.ModelSerializer):
     """
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
-        source='ingredient.id'
+        source='ingredient'
     )
 
     class Meta:
