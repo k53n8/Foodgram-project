@@ -302,6 +302,7 @@ class FavAndShopTemplateSerializer(serializers.ModelSerializer):
     def create_entry(serializer_class, pk, request):
         data = {'user': request.user.pk, 'recipe': pk}
         serializer = serializer_class(data=data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
         return serializer.save()
 
     def to_representation(self, instance):

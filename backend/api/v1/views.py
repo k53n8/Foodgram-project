@@ -89,7 +89,7 @@ class RecipeViewSet(ModelViewSet):
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk=None):
         recipe = get_object_or_404(Recipe, pk=pk)
-        deleted, _ = Favorites.objects.filter(
+        deleted, _ = ShoppingCart.objects.filter(
             recipe=recipe, user=request.user
             ).delete()
         if deleted == 0:
