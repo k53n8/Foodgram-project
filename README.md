@@ -66,7 +66,7 @@ Vary: Accept
 }
 ```
 ### Авторы проекта:
-Команда ЯндексПрактикум (https://practicum.yandex.ru/profile/backend-developer/)
+Команда ЯндексПрактикум (https://practicum.yandex.ru/profile/backend-developer/)\
 Олег Иванов (https://github.com/k53n8/)
 
 
