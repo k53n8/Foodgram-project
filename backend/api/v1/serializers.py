@@ -206,7 +206,10 @@ class AmountSerializer(serializers.ModelSerializer):
     Сериализатор кол-ва ингредиентов в рецепте
     при изменении или создании рецепта
     """
-    id = serializers.IntegerField()
+    id = serializers.PrimaryKeyRelatedField(
+        query=Ingredient.objects.all(),
+        source='ingredient.id'
+    )
 
     class Meta:
         model = IngredientsForRecipes
@@ -248,6 +251,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Вы уже добавили этот ингредиент!'
             )
+        return data
 
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
