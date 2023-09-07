@@ -20,13 +20,13 @@
 - Создайте в корне проекта файл виртуального окружения `.env` и заполните его по образцу `.env.example`
 - Далее перейдите в директорию `infra` и выполните там команду:\
 `docker compose -f docker-compose.yml up -d`\
-это запустит docker-контейнеры с БД, сетевой конфигурации, бэкенда и фронтэнда.
-- Применяем миграции:
-`docker compose -f docker-compose.yml exec backend python manage.py migrate`\
-- Собираем статику:
-`docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input`\
-- Импортируем список ингредиентовd в БД:
-`docker compose -f docker-compose.yml exec backend python manage.py import_csv_data`\
+Это запустит docker-контейнеры с БД, сетевой конфигурации, бэкенда и фронтэнда.
+- Применяем миграции:\
+`docker compose -f docker-compose.yml exec backend python manage.py migrate`
+- Собираем статику:\
+`docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input`
+- Импортируем список ингредиентовd в БД:\
+`docker compose -f docker-compose.yml exec backend python manage.py import_csv_data`
 - Документация к проекту доступна по эндпойнту `/api/docs/redoc`
 ### Пример запроса:
 ```
