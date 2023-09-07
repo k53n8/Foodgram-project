@@ -188,7 +188,7 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return bool(
             request and
-            self.user.is_authenticated and
+            request.user.is_authenticated and
             obj.add_favorites.filter(user=request.user).exists()
         )
 
