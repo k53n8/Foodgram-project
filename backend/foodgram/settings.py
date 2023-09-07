@@ -66,23 +66,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'foodgram_db'),
-        'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'foodgram_pass'),
-        'HOST': os.getenv('DB_HOST', 'db'),
-        'PORT': os.getenv('DB_PORT', 5432)
+if os.getenv('USE_SQLITE', 'False') == 'True':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'foodgram_db'),
+            'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'foodgram_pass'),
+            'HOST': os.getenv('DB_HOST', 'db'),
+            'PORT': os.getenv('DB_PORT', 5432)
+        }
+    }
 
 
 # Password validation
@@ -125,27 +126,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/backend_static/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# CONSTS
-
-USER_SYM_LIMIT = 150
-
-USER_EMAIL_SYM_LIMIT = 254
-
-RECIPE_SYM_LIMIT = 200
-
-OTHER_SYM_LIMIT = 150
-
-COLOR_SYM_LIMIT = 7
-
-DEFAULT_COLOR = '#675858'
 
 
 # REST_FRAMEWORK
@@ -171,4 +157,7 @@ REST_FRAMEWORK = {
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
+    'SERIALIZERS': {
+        'current_user': 'api.v1.serializers.UserGetSerializer',
+    },
 }
