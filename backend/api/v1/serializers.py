@@ -207,8 +207,8 @@ class AmountSerializer(serializers.ModelSerializer):
     при изменении или создании рецепта
     """
     id = serializers.PrimaryKeyRelatedField(
-        queryset=IngredientsForRecipes.objects.all(),
-        source='ingredient'
+        queryset=Ingredient.objects.all(),
+        source='ingredient.id'
     )
 
     class Meta:
