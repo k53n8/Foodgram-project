@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from django_filters import (CharFilter, FilterSet, ModelChoiceFilter,
-                            ModelMultipleChoiceFilter, NumberFilter)
+from django_filters import (BooleanFilter, CharFilter, FilterSet,
+                            ModelChoiceFilter, ModelMultipleChoiceFilter)
 
 from recipes.models import Ingredient, Recipe, Tag
 
@@ -9,11 +9,11 @@ User = get_user_model()
 
 class RecipeFilter(FilterSet):
     """Фильтр для рецептов"""
-    is_favorited = NumberFilter(
+    is_favorited = BooleanFilter(
         field_name='add_favorites__user',
         method='filter_is_favorited'
     )
-    is_in_shopping_cart = NumberFilter(
+    is_in_shopping_cart = BooleanFilter(
         field_name='add_shoppingcart__user',
         method='filter_is_in_shopping_cart'
     )

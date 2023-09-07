@@ -186,21 +186,19 @@ class RecipeGetSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-        is_favorited = (
+        return bool(
             request and
             request.user.is_authenticated and
             obj.add_favorites.filter(user=request.user).exists()
         )
-        return int(is_favorited)
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
-        is_in_shopping_cart = (
+        return bool(
             request and
             request.user.is_authenticated and
             obj.add_shoppingcart.filter(user=request.user).exists()
         )
-        return int(is_in_shopping_cart)
 
 
 class AmountSerializer(serializers.ModelSerializer):
@@ -210,7 +208,7 @@ class AmountSerializer(serializers.ModelSerializer):
     """
     id = serializers.PrimaryKeyRelatedField(
         queryset=IngredientsForRecipes.objects.all(),
-        source='ingredient.id'
+        source='ingredient'
     )
 
     class Meta:
