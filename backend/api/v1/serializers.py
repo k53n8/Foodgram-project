@@ -111,7 +111,7 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeGetSerializer(serializers.ModelSerializer):
     """Сериализатор получения рецепта"""
     tags = TagSerializer(many=True)
-    author = UserGetSerializer()
+    author = UserGetSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField()
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()

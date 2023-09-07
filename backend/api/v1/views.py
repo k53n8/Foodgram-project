@@ -113,7 +113,7 @@ class RecipeViewSet(ModelViewSet):
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         ingredients = IngredientsForRecipes.objects.filter(
-            recipe__add_shopcart__user=request.user
+            recipe__add_shoppingcart__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
         ).annotate(amount=F('amount'))
@@ -138,7 +138,7 @@ class UserViewSet(UserViewSet):
             methods=['get'])
     def subscriptions(self, request):
         pages = self.paginate_queryset(
-            User.objects.filter(subauthor__user=self.user)
+            User.objects.filter(subauthor__user=request.user)
         )
         serializer = SubGetSerializer(
             pages,
@@ -155,7 +155,7 @@ class UserViewSet(UserViewSet):
     def subscribe(self, request, pk=None):
         author = get_object_or_404(User, pk=pk)
         data = {
-            "user": self.user.pk,
+            "user": request.user.pk,
             "author": pk
         }
         serializer = SubPostSerializer(data=data)
@@ -169,7 +169,7 @@ class UserViewSet(UserViewSet):
     def delete_subscribe(self, request, pk=None):
         author = get_object_or_404(User, pk=pk)
         deleted, _ = Subscription.objects.filter(
-            user=self.user, author=author
+            user=request.user, author=author
         ).delete()
         if deleted == 0:
             return Response(

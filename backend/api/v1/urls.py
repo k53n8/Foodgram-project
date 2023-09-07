@@ -12,4 +12,6 @@ v1_router.register('ingredients', IngredientViewSet, basename='ingredients')
 urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(v1_router.urls)),
+    path('', include('djoser.urls')),
+
 ]
