@@ -20,8 +20,7 @@ from .permissions import IsAdminAuthorOrReadOnly
 from .serializers import (FavoritesSerializer, IngredientSerializer,
                           RecipeGetSerializer, RecipePostPatchDeleteSerializer,
                           ShopCartSerializer, SubGetSerializer,
-                          SubPostSerializer, TagSerializer,
-                          UserGetSerializer)
+                          SubPostSerializer, TagSerializer, UserGetSerializer)
 
 User = get_user_model()
 
