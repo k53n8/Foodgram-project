@@ -18,15 +18,15 @@
 - PostgreSQL
 ### Запуск проекта:
 - Создайте в корне проекта файл виртуального окружения `.env` и заполните его по образцу `.env.example`
-- Далее перейдите в директорию `infra` и выполните там команду: `docker compose -f docker-compose.yml up -d`\
-Это запустит контейнеры БД, сетевой конфигурации, бэкенда и фронтэнда\
-- Следующие команды будем выполнять в контейнере бэкенда:\
+- Далее перейдите в директорию `infra` и выполните там команду:\
+`docker compose -f docker-compose.yml up -d`\
+это запустит docker-контейнеры с БД, сетевой конфигурации, бэкенда и фронтэнда.
+- Применяем миграции:
 `docker compose -f docker-compose.yml exec backend python manage.py migrate`\
-Создаем миграции\
+- Собираем статику:
 `docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input`\
-Собираем статику\
+- Импортируем список ингредиентовd в БД:
 `docker compose -f docker-compose.yml exec backend python manage.py import_csv_data`\
-Импортируем список ингредиентовd в БД\
 - Документация к проекту доступна по эндпойнту `/api/docs/redoc`
 ### Пример запроса:
 ```
@@ -66,7 +66,7 @@ Vary: Accept
 }
 ```
 ### Авторы проекта:
-Команда ЯндексПрактикум\
-Олег Иванов
+Команда ЯндексПрактикум (https://practicum.yandex.ru/profile/backend-developer/)
+Олег Иванов (https://github.com/k53n8/)
 
 
