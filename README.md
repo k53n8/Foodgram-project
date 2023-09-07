@@ -7,7 +7,7 @@
 - http://foodgram.ydns.eu/
 - http://51.250.30.150:10000/
 ### Данные суперпользователя:
-- login: `'sup@sup.com`
+- login: `sup@sup.com`
 - password: `sup`
 ### Стек технологий:
 - Django
@@ -17,16 +17,16 @@
 - GitHub Actions
 - PostgreSQL
 ### Запуск проекта:
-- Создайте в корне проекта файл виртуального окружения .env и заполните его по образцу .env.example
-- Далее перейдите в директорию infra и выполните там команду: `docker compose -f docker-compose.yml up -d`
-Это запустит контейнеры БД, сетевой конфигурации, бэкенда и фронтэнда
-- Следующие команды будем выполнять в контейнере бэкенда:
-`docker compose -f docker-compose.yml exec backend python manage.py migrate`
-Создаем миграции
-`docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input`
-Собираем статику
-`docker compose -f docker-compose.yml exec backend python manage.py import_csv_data`
-Импортируем список ингредиентовd в БД
+- Создайте в корне проекта файл виртуального окружения `.env` и заполните его по образцу `.env.example`
+- Далее перейдите в директорию `infra` и выполните там команду: `docker compose -f docker-compose.yml up -d`\
+Это запустит контейнеры БД, сетевой конфигурации, бэкенда и фронтэнда\
+- Следующие команды будем выполнять в контейнере бэкенда:\
+`docker compose -f docker-compose.yml exec backend python manage.py migrate`\
+Создаем миграции\
+`docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input`\
+Собираем статику\
+`docker compose -f docker-compose.yml exec backend python manage.py import_csv_data`\
+Импортируем список ингредиентовd в БД\
 - Документация к проекту доступна по эндпойнту `/api/docs/redoc`
 ### Пример запроса:
 ```
@@ -66,7 +66,7 @@ Vary: Accept
 }
 ```
 ### Авторы проекта:
-Команда ЯндексПрактикум
+Команда ЯндексПрактикум\
 Олег Иванов
 
 
