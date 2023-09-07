@@ -207,8 +207,7 @@ class AmountSerializer(serializers.ModelSerializer):
     при изменении или создании рецепта
     """
     id = serializers.PrimaryKeyRelatedField(
-        query=Ingredient.objects.all(),
-        source='ingredient.id'
+        query=Ingredient.objects.all()
     )
 
     class Meta:
@@ -223,7 +222,10 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         many=True
     )
     author = UserGetSerializer(read_only=True)
-    ingredients = AmountSerializer(many=True)
+    ingredients = AmountSerializer(
+        source='ingredient_for_recipe',
+        many=True
+    )
     image = Base64ImageField()
 
     class Meta:
@@ -231,8 +233,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         fields = ('id', 'tags', 'author', 'ingredients',
                   'name', 'image', 'text', 'cooking_time')
 
-    def validate(self, data):
-        tags = data.get('tags', [])
+    def validate_tags(self, tags):
         if not tags:
             raise serializers.ValidationError(
                 'Пожалуйста добавьте теги к рецепту!'
@@ -241,7 +242,9 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Вы уже добавили этот тег!'
             )
-        ingredients = data.get('ingredients', [])
+        return tags
+
+    def validate_ingredients(self, ingredients):
         if not ingredients:
             raise serializers.ValidationError(
                 'Пожалуйста добавьте ингредиенты!'
@@ -251,7 +254,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Вы уже добавили этот ингредиент!'
             )
-        return data
+        return ingredients
 
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
