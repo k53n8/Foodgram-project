@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from django_filters import (AllValuesMultipleFilter, CharFilter, FilterSet,
-                            ModelChoiceFilter, NumberFilter)
+from django_filters import (CharFilter, FilterSet, ModelChoiceFilter,
+                            ModelMultipleChoiceFilter, NumberFilter)
 
 from recipes.models import Ingredient, Recipe, Tag
 
@@ -20,7 +20,7 @@ class RecipeFilter(FilterSet):
     author = ModelChoiceFilter(
         field_name='author', queryset=User.objects.all()
     )
-    tags = AllValuesMultipleFilter(
+    tags = ModelMultipleChoiceFilter(
         field_name='tags__slug', queryset=Tag.objects.all()
     )
 
