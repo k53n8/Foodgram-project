@@ -21,8 +21,7 @@ class RecipeFilter(FilterSet):
         field_name='author', queryset=User.objects.all()
     )
     tags = AllValuesMultipleFilter(
-        field_name='tags__slug', to_field_name='slug',
-        queryset=Tag.objects.all()
+        field_name='tags__slug', queryset=Tag.objects.all()
     )
 
     class Meta:
