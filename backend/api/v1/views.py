@@ -21,7 +21,7 @@ from .serializers import (FavoritesSerializer, IngredientSerializer,
                           RecipeGetSerializer, RecipePostPatchDeleteSerializer,
                           ShopCartSerializer, SubGetSerializer,
                           SubPostSerializer, TagSerializer,
-                          UserCreateSerializer, UserGetSerializer)
+                          UserGetSerializer)
 
 User = get_user_model()
 
@@ -132,15 +132,7 @@ class UserViewSet(UserViewSet):
     """Вьюсет для пользователя"""
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
-
-    @property
-    def user(self):
-        return self.request.user
-
-    def get_serializer_class(self):
-        if self.request.method in SAFE_METHODS:
-            return UserGetSerializer
-        return UserCreateSerializer
+    serializer_class = UserGetSerializer
 
     @action(detail=False,
             permission_classes=[IsAuthenticated],
