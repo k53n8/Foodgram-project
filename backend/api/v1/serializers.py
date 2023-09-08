@@ -30,9 +30,9 @@ class UserGetSerializer(UserSerializer):
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         return bool(
-           request and
-           request.user.is_authenticated and
-           obj.subauthor.filter(user=request.user).exists()
+            request
+            and request.user.is_authenticated
+            and obj.subauthor.filter(user=request.user).exists()
         )
 
 
@@ -87,7 +87,7 @@ class SubPostSerializer(serializers.ModelSerializer):
             )
         if Subscription.objects.filter(
                 user=data['user'], author=data['author']
-                ).exists():
+        ).exists():
             raise serializers.ValidationError(
                 {'subscription': 'Вы уже подписаны на данного пользователя!'}
             )
@@ -135,17 +135,17 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         request = self.context.get('request')
         return int(bool(
-            request and
-            request.user.is_authenticated and
-            obj.add_favorites.filter(user=request.user).exists()
+            request
+            and request.user.is_authenticated
+            and obj.add_favorites.filter(user=request.user).exists()
         ))
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         return int(bool(
-            request and
-            request.user.is_authenticated and
-            obj.add_shoppingcart.filter(user=request.user).exists()
+            request
+            and request.user.is_authenticated
+            and obj.add_shoppingcart.filter(user=request.user).exists()
         ))
 
 

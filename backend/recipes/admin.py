@@ -21,7 +21,7 @@ class ShoppingCartInline(admin.StackedInline):
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [
         IngredientsForRecipesInline, FavoritesInline, ShoppingCartInline
-        ]
+    ]
     list_display = ('pk', 'author', 'name', 'text', 'cooking_time',
                     'pub_date')
     search_fields = ('author', 'name', 'tags')

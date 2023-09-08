@@ -71,7 +71,7 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         deleted, _ = Favorites.objects.filter(
             recipe=recipe, user=request.user
-            ).delete()
+        ).delete()
         if deleted == 0:
             return Response(
                 {'error': 'Рецепт не найден в избранном.'},
@@ -93,7 +93,7 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         deleted, _ = ShoppingCart.objects.filter(
             recipe=recipe, user=request.user
-            ).delete()
+        ).delete()
         if deleted == 0:
             return Response(
                 {'error': 'Рецепт не найден в списке покупок.'},
