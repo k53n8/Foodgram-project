@@ -83,13 +83,13 @@ class SubPostSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['user'] == data['author']:
             raise serializers.ValidationError(
-                'Нельзя подписаться на себя!'
+                {'subscription': 'Нельзя подписаться на себя!'}
             )
         if Subscription.objects.filter(
                 user=data['user'], author=data['author']
                 ).exists():
             raise serializers.ValidationError(
-                'Вы уже подписаны на данного пользователя!'
+                {'subscription': 'Вы уже подписаны на данного пользователя!'}
             )
         return data
 
@@ -134,19 +134,19 @@ class RecipeGetSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-        return bool(
+        return int(bool(
             request and
             request.user.is_authenticated and
             obj.add_favorites.filter(user=request.user).exists()
-        )
+        ))
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
-        return bool(
+        return int(bool(
             request and
             request.user.is_authenticated and
             obj.add_shoppingcart.filter(user=request.user).exists()
-        )
+        ))
 
 
 class AmountSerializer(serializers.ModelSerializer):
@@ -179,23 +179,23 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def validate_tags(self, tags):
         if not tags:
             raise serializers.ValidationError(
-                'Пожалуйста добавьте теги к рецепту!'
+                {'tags': 'Пожалуйста добавьте теги к рецепту!'}
             )
         if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
-                'Вы уже добавили этот тег!'
+                {'tags': 'Теги не должны повторяться!'}
             )
         return tags
 
     def validate_ingredients(self, ingredients):
         if not ingredients:
             raise serializers.ValidationError(
-                'Пожалуйста добавьте ингредиенты!'
+                {'ingredients': 'Пожалуйста добавьте ингредиенты!'}
             )
         ingredient_ids = [ingredient['id'] for ingredient in ingredients]
         if len(ingredient_ids) != len(set(ingredient_ids)):
             raise serializers.ValidationError(
-                'Вы уже добавили этот ингредиент!'
+                {'ingredients': 'Ингредиенты не должны повторяться!'}
             )
         return ingredients
 
@@ -241,7 +241,7 @@ class FavAndShopTemplateSerializer(serializers.ModelSerializer):
         user = data.get('user')
         if self.Meta.model.objects.filter(recipe=recipe, user=user).exists():
             raise serializers.ValidationError(
-                'Вы уже добавили этот рецепт!'
+                {'recipe': 'Вы уже добавили этот рецепт!'}
             )
         return data
 
