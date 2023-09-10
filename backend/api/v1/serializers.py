@@ -102,8 +102,8 @@ class IngredientsForRecipesSerializer(serializers.ModelSerializer):
         source='ingredient.measurement_unit'
     )
 
-    class Meta: 
-        model = IngredientsForRecipes 
+    class Meta:
+        model = IngredientsForRecipes
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
