@@ -190,7 +190,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             [IngredientsForRecipes(
                 ingredient=Ingredient.objects.get(id=ingredient['id']),
                 recipe=recipe,
-                amount=ingredient.get('amount')
+                amount=ingredient['amount']
             ) for ingredient in ingredients]
         )
 
