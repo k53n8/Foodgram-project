@@ -96,11 +96,14 @@ class TagSerializer(serializers.ModelSerializer):
 
 class IngredientsForRecipesSerializer(serializers.ModelSerializer):
     """Сериализатор кол-ва ингредиентов в рецепте"""
-    id = serializers.IntegerField(source='ingredient.id')
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all(),
+        source='ingredient.id')
     name = serializers.CharField(source='ingredient.name')
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit'
     )
+    amount = serializers.IntegerField()
 
     class Meta:
         model = IngredientsForRecipes
@@ -143,20 +146,6 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         )
 
 
-class AmountSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор кол-ва ингредиентов в рецепте
-    при изменении или создании рецепта
-    """
-    id = serializers.PrimaryKeyRelatedField(
-        queryset=Ingredient.objects.all(),
-        source='ingredient.id')
-
-    class Meta:
-        model = IngredientsForRecipes
-        fields = ('id', 'amount')
-
-
 class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     """Сериализатор создания/изменения/удаления рецепта"""
     tags = serializers.PrimaryKeyRelatedField(
@@ -164,7 +153,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         many=True
     )
     author = UserGetSerializer(read_only=True)
-    ingredients = AmountSerializer(
+    ingredients = IngredientsForRecipesSerializer(
         many=True,
         source='ingredients_for_recipe'
     )
