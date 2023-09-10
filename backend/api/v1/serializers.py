@@ -150,7 +150,7 @@ class AmountSerializer(serializers.ModelSerializer):
     """
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
-        source='ingredient.id'
+        source='ingredient'
     )
 
     class Meta:
@@ -176,7 +176,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
             [IngredientsForRecipes(
-                ingredient_id=ingredient['id'].id,
+                ingredient_id=ingredient['ingredient'].id,
                 recipe=recipe,
                 amount=ingredient['amount']
             ) for ingredient in ingredients]
@@ -217,7 +217,9 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'ingredients': 'Пожалуйста добавьте ингредиенты!'}
             )
-        ingredient_ids = [ingredient['id'].id for ingredient in ingredients]
+        ingredient_ids = [
+            ingredient['ingredient'].id for ingredient in ingredients
+        ]
         if len(ingredient_ids) != len(set(ingredient_ids)):
             raise serializers.ValidationError(
                 {'ingredients': 'Ингредиенты не должны повторяться!'}
@@ -256,7 +258,7 @@ class FavAndShopTemplateSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return SubSmallRecipeSerializer(
-            instance,
+            instance.recipe,
             context=context
         ).data
 
