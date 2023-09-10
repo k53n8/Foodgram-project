@@ -10,7 +10,7 @@ from users.models import Subscription
 User = get_user_model()
 
 
-class UserCreateSerializer(UserCreateSerializer):
+class UserNewSerializer(UserCreateSerializer):
     """Сериализатор создания пользователя"""
     class Meta:
         model = User
@@ -44,7 +44,8 @@ class SubGetSerializer(UserGetSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     class Meta:
-        fields = UserGetSerializer.Meta.fields + ('recipes', 'recipes_count')
+        fields = [f for f in UserGetSerializer.Meta.fields if f != 'id']
+        + ['recipes', 'recipes_count']
 
     def get_recipes(self, obj):
         request = self.context.get('request')

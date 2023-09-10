@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
@@ -15,7 +15,7 @@ from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
 from users.models import Subscription
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import PageNumberPaginationWithLimit
-from .permissions import IsAdminAuthorOrReadOnly
+from .permissions import IsAuthorOrAuthenticatedOrReadOnly
 from .serializers import (FavoritesSerializer, IngredientSerializer,
                           RecipeGetSerializer, RecipePostPatchDeleteSerializer,
                           ShopCartSerializer, SubGetSerializer,
@@ -43,7 +43,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 class RecipeViewSet(ModelViewSet):
     """Вьюсет для рецептов"""
     queryset = Recipe.objects.all()
-    permission_classes = (IsAdminAuthorOrReadOnly,)
+    permission_classes = (IsAuthorOrAuthenticatedOrReadOnly,)
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
     pagination_class = PageNumberPaginationWithLimit
@@ -101,7 +101,7 @@ class RecipeViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
-    def get_product_list(self, ingredients):
+    def get_product_list(ingredients):
         list_of_products = [
             f'{ingredient["ingredient__name"]} - '
             f'{ingredient["amount"]} '
@@ -134,7 +134,6 @@ class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
     serializer_class = UserGetSerializer
-    permission_classes = [AllowAny]
 
     @action(detail=False,
             permission_classes=[IsAuthenticated],
@@ -158,8 +157,10 @@ class UsersViewSet(UserViewSet):
     )
     def subscribe(self, request, pk=None):
         author = get_object_or_404(User, pk=pk)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         Subscription.objects.create(user=request.user, author=author)
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, pk=None):
