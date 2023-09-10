@@ -176,7 +176,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
             [IngredientsForRecipes(
-                ingredient_id=ingredient['id'],
+                ingredient_id=ingredient['id'].id,
                 recipe=recipe,
                 amount=ingredient['amount']
             ) for ingredient in ingredients]
@@ -217,7 +217,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'ingredients': 'Пожалуйста добавьте ингредиенты!'}
             )
-        ingredient_ids = [ingredient['id'] for ingredient in ingredients]
+        ingredient_ids = [ingredient['id'].id for ingredient in ingredients]
         if len(ingredient_ids) != len(set(ingredient_ids)):
             raise serializers.ValidationError(
                 {'ingredients': 'Ингредиенты не должны повторяться!'}
