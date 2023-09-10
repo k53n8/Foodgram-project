@@ -153,20 +153,13 @@ class UsersViewSet(UserViewSet):
     @action(
         detail=True,
         methods=['post'],
-        permission_classes=[IsAuthenticated]
+        permission_classes=[IsAuthenticated],
+        serializer_class=SubPostSerializer
     )
     def subscribe(self, request, pk=None):
         author = get_object_or_404(User, pk=pk)
-        data = {
-            "user": request.user.pk,
-            "author": pk
-        }
-        serializer = SubPostSerializer(data=data)
-        serializer.save()
-        return Response(SubGetSerializer(
-            author,
-            context={'request': request}
-        ).data)
+        Subscription.objects.create(user=request.user, author=author)
+        return Response(status=status.HTTP_201_CREATED)
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, pk=None):
