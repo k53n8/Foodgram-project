@@ -173,32 +173,10 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         fields = ('id', 'tags', 'author', 'ingredients',
                   'name', 'image', 'text', 'cooking_time')
 
-    # def validate(self, data):
-    #     tags = data.get('tags')
-    #     ingredients = data.get('ingredients')
-    #     if not tags:
-    #         raise serializers.ValidationError(
-    #             {'tags': 'Пожалуйста добавьте теги к рецепту!'}
-    #         )
-    #     if len(tags) != len(set(tags)):
-    #         raise serializers.ValidationError(
-    #             {'tags': 'Теги не должны повторяться!'}
-    #         )
-    #     if not ingredients:
-    #         raise serializers.ValidationError(
-    #             {'ingredients': 'Пожалуйста добавьте ингредиенты!'}
-    #         )
-    #     ingredient_ids = [ingredient['id'] for ingredient in ingredients]
-    #     if len(ingredient_ids) != len(set(ingredient_ids)):
-    #         raise serializers.ValidationError(
-    #             {'ingredients': 'Ингредиенты не должны повторяться!'}
-    #         )
-    #     return data
-
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
             [IngredientsForRecipes(
-                ingredient_id=ingredient['id'],
+                ingredient_id=ingredient['ingredient'].id,
                 recipe=recipe,
                 amount=ingredient['amount']
             ) for ingredient in ingredients]
@@ -223,6 +201,28 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         instance.ingredients.clear()
         self.create_bulk_ingredients(recipe=instance, ingredients=ingredients)
         return super().update(instance, validated_data)
+
+    # def validate(self, data):
+    #     tags = data.get('tags')
+    #     ingredients = data.get('ingredients')
+    #     if not tags:
+    #         raise serializers.ValidationError(
+    #             {'tags': 'Пожалуйста добавьте теги к рецепту!'}
+    #         )
+    #     if len(tags) != len(set(tags)):
+    #         raise serializers.ValidationError(
+    #             {'tags': 'Теги не должны повторяться!'}
+    #         )
+    #     if not ingredients:
+    #         raise serializers.ValidationError(
+    #             {'ingredients': 'Пожалуйста добавьте ингредиенты!'}
+    #         )
+    #     ingredient_ids = [ingredient['id'] for ingredient in ingredients]
+    #     if len(ingredient_ids) != len(set(ingredient_ids)):
+    #         raise serializers.ValidationError(
+    #             {'ingredients': 'Ингредиенты не должны повторяться!'}
+    #         )
+    #     return data
 
     def to_representation(self, instance):
         request = self.context.get('request')
