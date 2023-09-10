@@ -62,12 +62,8 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def favorite(self, request, pk=None):
-        return Response(
-            FavoritesSerializer.create_entry(
-                FavoritesSerializer, pk, request
-            ).data,
-            status=status.HTTP_201_CREATED
-        )
+        return Response(FavoritesSerializer.create_entry(FavoritesSerializer,
+                        pk, request), status=status.HTTP_201_CREATED)
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk=None):
@@ -88,12 +84,8 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def shopping_cart(self, request, pk=None):
-        return Response(
-            ShopCartSerializer.create_entry(
-                ShopCartSerializer, pk, request
-            ).data,
-            status=status.HTTP_201_CREATED
-        )
+        return Response(ShopCartSerializer.create_entry(ShopCartSerializer,
+                        pk, request), status=status.HTTP_201_CREATED)
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk=None):
