@@ -111,7 +111,7 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     """Сериализатор получения рецепта"""
     tags = TagSerializer(many=True)
     author = UserGetSerializer(read_only=True)
-    ingredients = ingredients = IngredientsForRecipesSerializer(
+    ingredients = IngredientsForRecipesSerializer(
         source='ingredient_for_recipe',
         many=True,
         read_only=True
@@ -164,7 +164,10 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         many=True
     )
     author = UserGetSerializer(read_only=True)
-    ingredients = AmountSerializer(many=True)
+    ingredients = AmountSerializer(
+        many=True,
+        source='ingredients_for_recipe'
+    )
     image = Base64ImageField(required=True)
 
     class Meta:
