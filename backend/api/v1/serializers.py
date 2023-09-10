@@ -189,7 +189,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
             [IngredientsForRecipes(
-                ingredient=ingredient.get('ingredient')['id'],
+                ingredient=ingredient['ingredient']['id'],
                 recipe=recipe,
                 amount=ingredient.get('amount')
             ) for ingredient in ingredients]
