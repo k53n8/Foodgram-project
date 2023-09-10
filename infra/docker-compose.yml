@@ -20,6 +20,7 @@ services:
     volumes:
       - static:/backend_static
       - media:/app/media
+      - redoc:/app/_docs
     depends_on: 
       - db
 
@@ -39,7 +40,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
-      - ./docs/:/usr/share/nginx/html/api/docs/
+      - redoc:/usr/share/nginx/html/api/docs/
       - static:/var/html/static/
       - media:/var/html/media/
     depends_on:
