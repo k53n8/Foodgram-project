@@ -130,7 +130,7 @@ class RecipeViewSet(ModelViewSet):
         return response
 
 
-class UserViewSet(UserViewSet):
+class UsersViewSet(UserViewSet):
     """Вьюсет для пользователя"""
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
