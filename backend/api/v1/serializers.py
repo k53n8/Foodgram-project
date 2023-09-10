@@ -96,16 +96,14 @@ class TagSerializer(serializers.ModelSerializer):
 
 class IngredientsForRecipesSerializer(serializers.ModelSerializer):
     """Сериализатор кол-ва ингредиентов в рецепте"""
-    id = serializers.PrimaryKeyRelatedField(
-        queryset=Ingredient.objects.all(),
-        source='ingredient.id')
-    name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
+    id = serializers.IntegerField(source='ingredient.id')
+    name = serializers.CharField(source='ingredient.name')
+    measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit'
     )
 
-    class Meta:
-        model = IngredientsForRecipes
+    class Meta: 
+        model = IngredientsForRecipes 
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
@@ -145,6 +143,21 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         )
 
 
+class AmountSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор кол-ва ингредиентов в рецепте, при
+    изменении или создании рецепта
+    """
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all(),
+        source='ingredient'
+    )
+
+    class Meta:
+        model = IngredientsForRecipes
+        fields = ('id', 'amount')
+
+
 class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     """Сериализатор создания/изменения/удаления рецепта"""
     tags = serializers.PrimaryKeyRelatedField(
@@ -152,10 +165,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
         many=True
     )
     author = UserGetSerializer(read_only=True)
-    ingredients = IngredientsForRecipesSerializer(
-        many=True,
-        source='ingredients_for_recipe'
-    )
+    ingredients = AmountSerializer(many=True)
     image = Base64ImageField(required=True)
 
     class Meta:
@@ -188,7 +198,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def create_bulk_ingredients(self, recipe, ingredients):
         IngredientsForRecipes.objects.bulk_create(
             [IngredientsForRecipes(
-                ingredient=Ingredient.objects.get(id=ingredient['id']),
+                ingredient_id=ingredient['id'],
                 recipe=recipe,
                 amount=ingredient['amount']
             ) for ingredient in ingredients]
