@@ -62,8 +62,12 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def favorite(self, request, pk=None):
-        FavoritesSerializer.create_entry(FavoritesSerializer, pk, request)
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(
+            FavoritesSerializer.create_entry(
+                FavoritesSerializer, pk, request
+            ).data,
+            status=status.HTTP_201_CREATED
+        )
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk=None):
@@ -84,8 +88,12 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def shopping_cart(self, request, pk=None):
-        ShopCartSerializer.create_entry(ShopCartSerializer, pk, request)
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(
+            ShopCartSerializer.create_entry(
+                ShopCartSerializer, pk, request
+            ).data,
+            status=status.HTTP_201_CREATED
+        )
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk=None):
@@ -98,7 +106,6 @@ class RecipeViewSet(ModelViewSet):
                 {'error': 'Рецепт не найден в списке покупок.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        ShoppingCart.objects.filter(recipe=recipe, user=request.user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
