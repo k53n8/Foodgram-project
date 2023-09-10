@@ -6,14 +6,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, ShoppingCart, Tag)
 from users.models import Subscription
-
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import PageNumberPaginationWithLimit
 from .permissions import IsAdminAuthorOrReadOnly
@@ -72,7 +71,7 @@ class RecipeViewSet(ModelViewSet):
         deleted, _ = Favorites.objects.filter(
             recipe=recipe, user=request.user
         ).delete()
-        if deleted == 0:
+        if not deleted:
             return Response(
                 {'error': 'Рецепт не найден в избранном.'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -94,7 +93,7 @@ class RecipeViewSet(ModelViewSet):
         deleted, _ = ShoppingCart.objects.filter(
             recipe=recipe, user=request.user
         ).delete()
-        if deleted == 0:
+        if not deleted:
             return Response(
                 {'error': 'Рецепт не найден в списке покупок.'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -102,6 +101,7 @@ class RecipeViewSet(ModelViewSet):
         ShoppingCart.objects.filter(recipe=recipe, user=request.user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @staticmethod
     def get_product_list(self, ingredients):
         list_of_products = [
             f'{ingredient["ingredient__name"]} - '
@@ -135,6 +135,7 @@ class UserViewSet(UserViewSet):
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
     serializer_class = UserGetSerializer
+    permission_classes = [AllowAny]
 
     @action(detail=False,
             permission_classes=[IsAuthenticated],
@@ -174,7 +175,7 @@ class UserViewSet(UserViewSet):
         deleted, _ = Subscription.objects.filter(
             user=request.user, author=author
         ).delete()
-        if deleted == 0:
+        if not deleted:
             return Response(
                 {'error': 'Вы не подписаны на данного пользователя.'},
                 status=status.HTTP_400_BAD_REQUEST

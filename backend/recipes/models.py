@@ -4,6 +4,8 @@ from django.db import models
 
 from foodgram.constants import (COLOR_FIELD_SYMBOL_LIMIT, DEFAULT_COLOR,
                                 GENERAL_FIELDS_SYMBOL_LIMIT,
+                                MAX_VALUE_FOR_AMOUNT_OR_TIME,
+                                MIN_VALUE_FOR_AMOUNT_OR_TIME,
                                 RECIPE_NAME_FIELD_SYMBOL_LIMIT)
 from users.models import User
 
@@ -19,6 +21,7 @@ class Tag(models.Model):
         max_length=COLOR_FIELD_SYMBOL_LIMIT,
         verbose_name='Цвет тега',
         default=DEFAULT_COLOR,
+        unique=True,
     )
     slug = models.SlugField(
         verbose_name='Слаг тега',
@@ -82,10 +85,12 @@ class Recipe(models.Model):
         verbose_name='Время приготовления (мин.)',
         validators=[
             MinValueValidator(
-                1, message='Время приготовления должно быть больше 0!'
+                MIN_VALUE_FOR_AMOUNT_OR_TIME,
+                message='Время приготовления должно быть больше 0!'
             ),
             MaxValueValidator(
-                32000, message='Время приготовления не должно превышать 32000!'
+                MAX_VALUE_FOR_AMOUNT_OR_TIME,
+                message='Время приготовления не должно превышать 32000!'
             ),
         ],
     )
@@ -101,8 +106,6 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта',
     )
     image = models.ImageField(
-        blank=True,
-        default=None,
         upload_to='recipes/images/',
         verbose_name='Изображение',
     )
@@ -176,10 +179,12 @@ class IngredientsForRecipes(models.Model):
         verbose_name='Количество ингредиента',
         validators=[
             MinValueValidator(
-                1, message='Кол-во ингредиента должно быть больше 0!'
+                MIN_VALUE_FOR_AMOUNT_OR_TIME,
+                message='Кол-во ингредиента должно быть больше 0!'
             ),
             MaxValueValidator(
-                32000, message='Кол-во ингредиента не должно превышать 32000!'
+                MAX_VALUE_FOR_AMOUNT_OR_TIME,
+                message='Кол-во ингредиента не должно превышать 32000!'
             ),
         ],
     )
