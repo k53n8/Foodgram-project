@@ -22,7 +22,7 @@ jobs:
         pip install -r ./backend/requirements.txt  
     - name: Test with flake8 and django 
       run: | 
-        python -m flake8 backend/ 
+        python -m flake8 --config=backend/setup.cfg backend/ 
    
   build_backend_and_push_to_docker_hub: 
     name: Push backend image to DockerHub 
