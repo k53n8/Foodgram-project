@@ -15,7 +15,8 @@ from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
 from users.models import Subscription
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import PageNumberPaginationWithLimit
-from .permissions import IsAuthorOrAuthenticatedOrReadOnly
+from .permissions import (CurrentUserPermission,
+                          IsAuthorOrAuthenticatedOrReadOnly)
 from .serializers import (FavoritesSerializer, IngredientSerializer,
                           RecipeGetSerializer, RecipePostPatchDeleteSerializer,
                           ShopCartSerializer, SubGetSerializer,
@@ -134,6 +135,7 @@ class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
     serializer_class = UserGetSerializer
+    permission_classes = [CurrentUserPermission]
 
     @action(detail=False,
             permission_classes=[IsAuthenticated],
@@ -160,7 +162,13 @@ class UsersViewSet(UserViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         Subscription.objects.create(user=request.user, author=author)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer_to_repr = SubGetSerializer(
+            author,
+            context={'request': request}
+        )
+        return Response(
+            serializer_to_repr.data, status=status.HTTP_201_CREATED
+        )
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, pk=None):
