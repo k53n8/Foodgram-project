@@ -138,7 +138,7 @@ class UsersViewSet(UserViewSet):
     @action(detail=False,
             methods=['get'],
             permission_classes=[IsAuthenticated])
-    def me(self, request):
+    def me(self, request):  # без этого джосеровский эндпойнт выкидывает 500
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = UserGetSerializer(request.user)
