@@ -44,7 +44,7 @@ class SubGetSerializer(UserGetSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     class Meta:
-        fields = UserGetSerializer.Meta.fields + ['recipes', 'recipes_count']
+        fields = UserGetSerializer.Meta.fields + ('recipes', 'recipes_count')
 
     def get_recipes(self, obj):
         request = self.context.get('request')

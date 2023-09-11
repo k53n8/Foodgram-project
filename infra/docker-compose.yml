@@ -21,7 +21,7 @@ services:
     volumes:
       - static:/backend_static
       - media:/app/media
-      - redoc:/app/_docs
+      - redoc:/app/api/docs
     depends_on: 
       - db
 
