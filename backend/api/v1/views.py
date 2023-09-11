@@ -172,7 +172,6 @@ class UsersViewSet(UserViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         serializer.is_valid(raise_exception=True)
-        Subscription.objects.create(user=request.user, author=author)
         serializer_to_repr = SubGetSerializer(
             author,
             context={'request': request}

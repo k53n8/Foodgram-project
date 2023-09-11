@@ -10,7 +10,6 @@ v1_router.register('tags', TagViewSet, basename='tags')
 v1_router.register('ingredients', IngredientViewSet, basename='ingredients')
 
 urlpatterns = [
-    path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(v1_router.urls)),
 ]
