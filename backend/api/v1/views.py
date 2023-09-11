@@ -15,8 +15,7 @@ from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
 from users.models import Subscription
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import PageNumberPaginationWithLimit
-from .permissions import (CurrentUserPermission,
-                          IsAuthorOrAuthenticatedOrReadOnly)
+from .permissions import IsAuthorOrAuthenticatedOrReadOnly
 from .serializers import (FavoritesSerializer, IngredientSerializer,
                           RecipeGetSerializer, RecipePostPatchDeleteSerializer,
                           ShopCartSerializer, SubGetSerializer,
@@ -135,7 +134,15 @@ class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
     serializer_class = UserGetSerializer
-    permission_classes = [CurrentUserPermission]
+
+    @action(detail=False,
+            methods=['get'],
+            permission_classes=[IsAuthenticated])
+    def me(self, request):
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = UserGetSerializer(request.user)
+        return Response(serializer.data)
 
     @action(detail=False,
             permission_classes=[IsAuthenticated],
@@ -159,7 +166,11 @@ class UsersViewSet(UserViewSet):
     )
     def subscribe(self, request, id=None):
         author = get_object_or_404(User, pk=id)
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(
+            data={'user': request.user.id, 'author': author.id}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         serializer.is_valid(raise_exception=True)
         Subscription.objects.create(user=request.user, author=author)
         serializer_to_repr = SubGetSerializer(

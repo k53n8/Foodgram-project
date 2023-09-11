@@ -31,9 +31,11 @@ class UserGetSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if request and request.user.is_authenticated:
-            return bool(obj.subauthor.filter(user=request.user).exists())
-        return False
+        return bool(
+            request
+            and request.user.is_authenticated
+            and obj.subauthor.filter(user=request.user).exists()
+        )
 
 
 class SubGetSerializer(UserGetSerializer):
