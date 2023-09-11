@@ -157,8 +157,8 @@ class UsersViewSet(UserViewSet):
         permission_classes=[IsAuthenticated],
         serializer_class=SubPostSerializer
     )
-    def subscribe(self, request, pk=None):
-        author = get_object_or_404(User, pk=pk)
+    def subscribe(self, request, id=None):
+        author = get_object_or_404(User, pk=id)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         Subscription.objects.create(user=request.user, author=author)
@@ -171,8 +171,8 @@ class UsersViewSet(UserViewSet):
         )
 
     @subscribe.mapping.delete
-    def delete_subscribe(self, request, pk=None):
-        author = get_object_or_404(User, pk=pk)
+    def delete_subscribe(self, request, id=None):
+        author = get_object_or_404(User, pk=id)
         deleted, _ = Subscription.objects.filter(
             user=request.user, author=author
         ).delete()
