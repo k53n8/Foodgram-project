@@ -27,7 +27,7 @@
 `docker compose -f docker-compose.yml exec backend python manage.py collectstatic --no-input`
 - Импортируем список ингредиентовd в БД:\
 `docker compose -f docker-compose.yml exec backend python manage.py import_csv_data`
-- Документация к проекту доступна по эндпойнту `/api/docs/redoc`
+- Документация к проекту доступна по эндпойнту `http://foodgram.ydns.eu/api/docs/redoc.html`
 ### Пример запроса:
 ```
 GET /api/users/
