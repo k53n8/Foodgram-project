@@ -210,10 +210,11 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'ingredients': 'Ингредиенты не должны повторяться!'}
             )
-        if not data.get('image'):
-            raise serializers.ValidationError(
-                {'image': 'Пожалуйста добавьте картинку к рецепту!'}
-            )
+        if not self.instance or not self.instance.image:
+            if 'image' not in data:
+                raise serializers.ValidationError(
+                    {'image': 'Пожалуйста добавьте картинку к рецепту!'}
+                )
         return data
 
     def create_bulk_ingredients(self, recipe, ingredients):

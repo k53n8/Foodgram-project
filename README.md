@@ -7,8 +7,8 @@
 - http://foodgram.ydns.eu/
 - http://51.250.30.150:10000/
 ### Данные суперпользователя:
-- login: `sup@sup.com`
-- password: `sup`
+- email: `review@admin.ru`
+- password: `review1admin`
 ### Стек технологий:
 - Django
 - REST Api 

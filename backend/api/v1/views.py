@@ -15,7 +15,8 @@ from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
 from users.models import Subscription
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import PageNumberPaginationWithLimit
-from .permissions import IsAuthorOrAuthenticatedOrReadOnly
+from .permissions import (CustomUserPermissions,
+                          IsAuthorOrAuthenticatedOrReadOnly)
 from .serializers import (FavoritesSerializer, IngredientSerializer,
                           RecipeGetSerializer, RecipePostPatchDeleteSerializer,
                           ShopCartSerializer, SubGetSerializer,
@@ -131,6 +132,7 @@ class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     pagination_class = PageNumberPaginationWithLimit
     serializer_class = UserGetSerializer
+    permission_classes = [CustomUserPermissions]
 
     @action(detail=False,
             permission_classes=[IsAuthenticated],
