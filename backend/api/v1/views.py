@@ -48,9 +48,6 @@ class RecipeViewSet(ModelViewSet):
     filterset_class = RecipeFilter
     pagination_class = PageNumberPaginationWithLimit
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
             return RecipeGetSerializer
@@ -136,15 +133,6 @@ class UsersViewSet(UserViewSet):
     serializer_class = UserGetSerializer
 
     @action(detail=False,
-            methods=['get'],
-            permission_classes=[IsAuthenticated])
-    def me(self, request):  # без этого джосеровский эндпойнт выкидывает 500
-        if not request.user.is_authenticated:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        serializer = UserGetSerializer(request.user)
-        return Response(serializer.data)
-
-    @action(detail=False,
             permission_classes=[IsAuthenticated],
             methods=['get'])
     def subscriptions(self, request):
@@ -171,7 +159,6 @@ class UsersViewSet(UserViewSet):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        serializer.is_valid(raise_exception=True)
         serializer_to_repr = SubGetSerializer(
             author,
             context={'request': request}

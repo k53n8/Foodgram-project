@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, ShoppingCart, Tag)
@@ -78,6 +79,20 @@ class SubPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = ('user', 'author')
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Subscription.objects.all(),
+                fields=['user', 'author'],
+                message='Вы уже подписаны на данного пользователя!'
+            )
+        ]
+
+        def validate(self, data):
+            if data['user'] == data['author']:
+                raise serializers.ValidationError(
+                    {'subscription': 'Вы не можете подписаться на себя!'}
+                )
+            return data
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -195,6 +210,10 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'ingredients': 'Ингредиенты не должны повторяться!'}
             )
+        if not data.get('image'):
+            raise serializers.ValidationError(
+                {'image': 'Пожалуйста добавьте картинку к рецепту!'}
+            )
         return data
 
     def create_bulk_ingredients(self, recipe, ingredients):
@@ -209,7 +228,10 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)
+        recipe = Recipe.objects.create(
+            author=self.context['request'].user,
+            **validated_data
+        )
         recipe.tags.set(tags)
         self.create_bulk_ingredients(recipe=recipe, ingredients=ingredients)
         return recipe
