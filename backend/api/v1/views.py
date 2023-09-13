@@ -102,7 +102,7 @@ class RecipeViewSet(ModelViewSet):
     def get_product_list(ingredients):
         list_of_products = [
             f'{ingredient["ingredient__name"]} - '
-            f'{ingredient["amount"]} '
+            f'{ingredient["total_amount"]} '
             f'{ingredient["ingredient__measurement_unit"]}'
             for ingredient in ingredients
         ]
