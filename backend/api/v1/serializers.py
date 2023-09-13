@@ -87,12 +87,12 @@ class SubPostSerializer(serializers.ModelSerializer):
             )
         ]
 
-        def validate(self, data):
-            if data['user'] == data['author']:
-                raise serializers.ValidationError(
-                    {'subscription': 'Вы не можете подписаться на себя!'}
-                )
-            return data
+    def validate(self, data):
+        if data['user'] == data['author']:
+            raise serializers.ValidationError(
+                {'subscription': 'Вы не можете подписаться на себя!'}
+            )
+        return data
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -191,6 +191,7 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
     def validate(self, data):
         tags = data.get('tags')
         ingredients = data.get('ingredients')
+        image = data.get('image')
         if not tags:
             raise serializers.ValidationError(
                 {'tags': 'Пожалуйста добавьте теги к рецепту!'}
@@ -210,11 +211,10 @@ class RecipePostPatchDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'ingredients': 'Ингредиенты не должны повторяться!'}
             )
-        if not self.instance or not self.instance.image:
-            if 'image' not in data:
-                raise serializers.ValidationError(
-                    {'image': 'Пожалуйста добавьте картинку к рецепту!'}
-                )
+        if not image and not self.instance.image:
+            raise serializers.ValidationError(
+                {'image': 'Пожалуйста добавьте картинку к рецепту!'}
+            )
         return data
 
     def create_bulk_ingredients(self, recipe, ingredients):

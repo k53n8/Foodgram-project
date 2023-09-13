@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.db.models import F
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -114,9 +114,9 @@ class RecipeViewSet(ModelViewSet):
     def download_shopping_cart(self, request):
         ingredients = IngredientsForRecipes.objects.filter(
             recipe__add_shoppingcart__user=request.user
-        ).order_by('ingredient__name').values(
+        ).values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(amount=F('amount'))
+        ).annotate(total_amount=Sum('amount')).order_by('ingredient__name')
 
         list_of_products = self.get_product_list(ingredients)
         file = 'list_of_products.txt'
